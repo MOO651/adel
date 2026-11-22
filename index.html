@@ -115,28 +115,49 @@ footer{text-align:center;margin-top:50px;color:var(--ivory-dim);font-size:14px;o
 .tasks label{display:flex;align-items:center;gap:8px;font-size:15px;color:var(--ivory);cursor:pointer;padding:6px 0}
 .tasks input[type=checkbox]{width:18px;height:18px;accent-color:var(--gold)}
 .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+/* Refined office dashboard */
+:focus-visible{outline:3px solid var(--gold-soft);outline-offset:3px}
+.h-title h1{line-height:1.3}
+.h-title .subtitle{margin-top:3px}
+.mode-switch{box-shadow:0 12px 30px rgba(0,0,0,.18)}
+.topbar{position:relative;box-shadow:0 14px 34px rgba(0,0,0,.16)}
+.stats .stat{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.025));box-shadow:0 10px 25px rgba(0,0,0,.12);transition:transform .18s,border-color .18s}
+.stats .stat:hover{transform:translateY(-2px);border-color:rgba(212,175,55,.65)}
+#adminContent section>.card{box-shadow:0 12px 28px rgba(0,0,0,.12)}
+input,select,textarea{transition:border-color .18s,box-shadow .18s}
+input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(212,175,55,.12)}
+button{min-height:40px}
 
 /* ===== logo image ===== */
 img.rlogo{width:82px;height:90px;object-fit:contain;filter:drop-shadow(0 0 14px rgba(212,175,55,.45))}
 /* ===== print ===== */
 .print-logo{display:none}
 #printArea{display:none}
+@page{size:A4 portrait;margin:12mm}
 @media print{
-  body{background:#fff !important;color:#000 !important}
+  html,body{width:100%;min-height:0;background:#fff !important;color:#17130b !important;font-family:'Cairo',Arial,sans-serif !important;font-size:11pt;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   body::before{display:none}
   #appRoot{display:none !important}
   #printArea{display:block !important}
-  .pcard{border:2.5px solid #D4AF37;border-radius:6px;padding:22px 26px !important;margin-bottom:8px}
-  .pcard::before{content:"";display:block;border:1px solid rgba(212,175,55,.6);border-radius:3px;padding:14px 18px;margin:-22px -26px 18px}
-  .phead{display:flex;align-items:center;gap:14px;border-bottom:2px solid #D4AF37;padding-bottom:10px;margin-bottom:6px}
-  .phead img.rlogo{width:64px;height:70px}
-  .phead h1{font-family:'Amiri',serif;font-size:24px;margin:0;color:#8a6d1c}
+  .pcard{position:relative;border:1.2px solid #9a7624;border-radius:2px;padding:14mm 11mm 10mm !important;margin:0;min-height:265mm;background:#fff;box-shadow:inset 0 0 0 3px #fff,inset 0 0 0 4px #eadfbf}
+  .pcard::before{content:none}
+  .phead{display:flex;align-items:center;gap:14px;border-bottom:2px solid #9a7624;padding-bottom:9mm;margin-bottom:5mm;break-inside:avoid}
+  .phead img.rlogo{width:25mm;height:30mm;object-fit:contain;filter:none}
+  .phead h1{font-family:'Amiri',serif;font-size:20pt;margin:0;color:#5c4317}
+  .phead h1::after{content:'مكتب المستشار';display:block;font:10pt 'Cairo',Arial,sans-serif;color:#5c5140;margin-top:2mm}
+  .pdate{text-align:center;font-size:10pt;margin:0 0 8mm;color:#5c5140}
+  .psec{margin-bottom:8mm;break-inside:avoid}
+  .psec h3{font-size:12pt;color:#493714;border-bottom:1px solid #b99b5b;padding:0 0 2mm;margin:0 0 3mm}
+  table.pmed{font-size:9.5pt}
+  table.pmed th,table.pmed td{border:1px solid #9a927e;padding:2.2mm 2.5mm}
+  table.pmed th{background:#f5f0e3;color:#332b1d}
+  .plines div{height:9mm;border-color:#c9c1ae}
+  .pinfo{font-size:10.5pt;gap:3mm 7mm}
+  .pinfo div{padding:2mm 0;border-bottom:1px dotted #aaa18d}
   .pdate{text-align:center;font-size:14px;margin-bottom:14px}
-  .pdate{text-align:center;font-size:14px;margin-bottom:14px}
-  .pcard{page-break-after:always;padding:0}
-  .pcard:last-child{page-break-after:auto}
+  .pcard{break-after:page;page-break-after:always}
+  .pcard:last-child{break-after:auto;page-break-after:auto}
   .psec{margin-bottom:16px;page-break-inside:avoid}
-  .psec h3{font-size:16px;border-bottom:1.5px solid #000;padding-bottom:4px;margin-bottom:8px}
   .pinfo{display:grid;grid-template-columns:1fr 1fr;gap:6px 20px;font-size:14px}
   .pinfo div{border-bottom:1px dotted #999;padding:4px 0}
   .pinfo b{color:#000}
@@ -146,11 +167,35 @@ img.rlogo{width:82px;height:90px;object-fit:contain;filter:drop-shadow(0 0 14px 
   .plines{margin-top:6px}
   .plines div{border-bottom:1px solid #bbb;height:32px}
   .pnext{margin-top:14px}
+  .pdate{text-align:center;font-size:10pt;margin:0 0 8mm;color:#5c5140}
+  .psec{margin-bottom:8mm;break-inside:avoid}
+  .psec h3{font-size:12pt;color:#493714;border-bottom:1px solid #b99b5b;padding:0 0 2mm;margin:0 0 3mm}
+  table.pmed{font-size:9.5pt}
+  table.pmed th,table.pmed td{border:1px solid #9a927e;padding:2.2mm 2.5mm}
+  table.pmed th{background:#f5f0e3;color:#332b1d}
+  .plines div{height:9mm;border-color:#c9c1ae}
+  .pinfo{font-size:10.5pt;gap:3mm 7mm}
+  .pinfo div{padding:2mm 0;border-bottom:1px dotted #aaa18d}
 }
 @media(max-width:640px){
   h1{font-size:28px}
   .clock{font-size:22px}
   td,th{padding:8px 6px;font-size:14px}
+  .wrap{padding:14px 12px 40px}
+  .mode-switch{width:100%;display:grid!important;grid-template-columns:1fr 1fr}
+  .mode-switch button{padding:10px 8px;font-size:13px}
+  .topbar{gap:10px;padding:12px}
+  .topbar>.btn{width:100%}
+  .stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .stats .stat{padding:10px 6px}
+  .stat .num{font-size:25px}
+  .stat .lbl{font-size:12px}
+  .pin-box{margin:24px auto;padding:22px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+@media print{
+  .pcard{break-after:page;page-break-after:always}
+  .pcard:last-child{break-after:auto;page-break-after:auto}
 }
 </style>
 </head>
@@ -323,15 +368,11 @@ img.rlogo{width:82px;height:90px;object-fit:contain;filter:drop-shadow(0 0 14px 
 
 <script>
 /* ================= storage ================= */
-const KEY='abu_rayyan_office_v2';
 function defaults(){
-  return {
-    wa:'',
-    meds:[],appts:[],reqs:[],notes:"",tasks:[],lastReset:new Date().toDateString(),lastReq:0
-  };
+  return {wa:'',meds:[],appts:[],reqs:[],notes:'',tasks:[],lastReset:new Date().toDateString(),lastReq:0};
 }
 let db=defaults(),adminAuthenticated=false,saveTimer=null;
-function save(){render();if(!adminAuthenticated)return;clearTimeout(saveTimer);saveTimer=setTimeout(async()=>{try{const r=await fetch('/api/state',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({data:db})});if(!r.ok)throw new Error('save failed')}catch(e){console.error(e);alert('Could not save changes to the server.')}},300)}
+function save(){render();if(!adminAuthenticated)return;clearTimeout(saveTimer);saveTimer=setTimeout(async()=>{try{const r=await fetch('/api/state',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({data:db})});if(!r.ok)throw new Error('save failed')}catch(e){console.error(e);alert('تعذر حفظ التعديلات على الخادم.')}},300)}
 
 /* daily med reset */
 if(db.lastReset!==new Date().toDateString()){
@@ -362,6 +403,7 @@ async function tryPin(){
 }
 function changePin(){alert('لتغيير الرمز حدّث ADMIN_PIN في إعدادات Vercel.')}
 
+/* ================= clock ================= */
 function tick(){
   const now=new Date();
   document.getElementById('clock').textContent=now.toLocaleTimeString('ar-EG');
@@ -681,7 +723,7 @@ function render(){
   document.getElementById('stAppts').textContent=db.appts.filter(a=>a.st!=='تم').length;
   document.getElementById('stMeds').textContent=db.meds.filter(m=>!m.taken).length;
   document.getElementById('stReqs').textContent=db.reqs.length;
-  document.getElementById('pinShow').textContent='محفوظ في إعدادات الخادم';
+  document.getElementById('pinShow').textContent='محفوظ بأمان في الخادم';
   document.getElementById('waShow').textContent=db.wa||'لم يتم التعيين';
   const n=document.getElementById('notes');
   if(document.activeElement!==n)n.value=db.notes||'';
