@@ -140,6 +140,11 @@ button{min-height:40px}
 
 /* ===== logo image ===== */
 img.rlogo{width:82px;height:90px;object-fit:contain;filter:drop-shadow(0 0 14px rgba(212,175,55,.45))}
+.admin-logo-entry{display:flex;justify-content:center;margin:18px auto 0}
+.admin-logo-entry button{width:42px;height:52px;min-height:0;padding:2px;background:transparent;border:0;opacity:.42;cursor:pointer;transition:opacity .2s,transform .2s}
+.admin-logo-entry button:hover,.admin-logo-entry button:focus-visible{opacity:.9;transform:translateY(-2px)}
+.admin-logo-entry img{width:100%;height:100%;object-fit:contain}
+@media print{.admin-logo-entry{display:none!important}}
 /* ===== print ===== */
 .print-logo{display:none}
 #printArea{display:none}
@@ -256,7 +261,7 @@ img.rlogo{width:82px;height:90px;object-fit:contain;filter:drop-shadow(0 0 14px 
 
 <div class="mode-switch no-print" id="modeSwitch">
   <button id="tabGuest" class="active" onclick="showMode('guest')">🕌 بوابة حجز المواعيد (للضيوف)</button>
-  <button id="tabAdmin" onclick="showMode('admin')">🔐 لوحة المتابعة الخاصة</button>
+  <button id="tabAdmin" style="display:none" onclick="showMode('admin')">🔐 لوحة المتابعة الخاصة</button>
 </div>
 
 <!-- ============ GUEST VIEW ============ -->
@@ -297,6 +302,7 @@ img.rlogo{width:82px;height:90px;object-fit:contain;filter:drop-shadow(0 0 14px 
     </div>
   </section>
   <footer>© مكتب المستشار أبو ريان — بوابة الضيوف</footer>
+  <div class="admin-logo-entry"><button type="button" onclick="openAdminPanel()" aria-label="فتح لوحة الإدارة"><img src="_logo.png" alt=""></button></div>
 </div>
 
 <!-- ============ ADMIN VIEW ============ -->
@@ -423,7 +429,8 @@ if(db.lastReset!==new Date().toDateString()){
 
 /* ================= mode switching & PIN ================= */
 let lastBooking=null;
-function showMode(m){
+function openAdminPanel(){showMode('admin')}
++function showMode(m){
   document.getElementById('tabGuest').classList.toggle('active',m==='guest');
   document.getElementById('tabAdmin').classList.toggle('active',m==='admin');
   document.getElementById('guestView').style.display=m==='guest'?'block':'none';
