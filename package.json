@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@neondatabase/serverless": "^1.2.1",
     "pdf-to-png-converter": "^4.3.0"
   }
 }

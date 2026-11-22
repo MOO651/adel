@@ -326,23 +326,12 @@ img.rlogo{width:82px;height:90px;object-fit:contain;filter:drop-shadow(0 0 14px 
 const KEY='abu_rayyan_office_v2';
 function defaults(){
   return {
-    pin:'2026',wa:'',
-    meds:[
-      {t:"08:00",n:"دواء الضغط",dose:"1 قرص",food:"قبل الأكل",slot:"morning",taken:false,takenAt:null},
-      {t:"14:00",n:"دواء السكر",dose:"1 كبسولة",food:"بعد الأكل",slot:"noon",taken:false,takenAt:null},
-      {t:"18:00",n:"مضاد الهيستامين",dose:"نصف قرص",food:"مع الماء",slot:"evening",taken:false,takenAt:null},
-      {t:"21:30",n:"فيتامين د",dose:"1 قرص",food:"بعد العشا",slot:"night",taken:false,takenAt:null}
-    ],
-    appts:[
-      {t:"10:00",n:"أ. محمد سالم",title:"شركة النهضة",r:"مراجعة عقد — تجهيز النسخ",p:"المكتب الرئيسي",map:"",st:"قادم"},
-      {t:"16:00",n:"د. أحمد فؤاد",title:"عيادة خاصة",r:"استشارة قانونية",p:"العيادة",map:"",st:"قادم"}
-    ],
-    reqs:[],notes:"",tasks:[],lastReset:new Date().toDateString(),lastReq:0
+    wa:'',
+    meds:[],appts:[],reqs:[],notes:"",tasks:[],lastReset:new Date().toDateString(),lastReq:0
   };
 }
-let db;
-try{db=JSON.parse(localStorage.getItem(KEY))||defaults()}catch(e){db=defaults()}
-function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}
+let db=defaults(),adminAuthenticated=false,saveTimer=null;
+function save(){render();if(!adminAuthenticated)return;clearTimeout(saveTimer);saveTimer=setTimeout(async()=>{try{const r=await fetch('/api/state',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({data:db})});if(!r.ok)throw new Error('save failed')}catch(e){console.error(e);alert('Could not save changes to the server.')}},300)}
 
 /* daily med reset */
 if(db.lastReset!==new Date().toDateString()){
@@ -357,26 +346,22 @@ function showMode(m){
   document.getElementById('tabAdmin').classList.toggle('active',m==='admin');
   document.getElementById('guestView').style.display=m==='guest'?'block':'none';
   document.getElementById('adminView').style.display=m==='admin'?'block':'none';
-  if(m==='admin'&&!sessionStorage.getItem('ar_admin_ok')){document.getElementById('pinGate').style.display='block';document.getElementById('adminContent').style.display='none';setTimeout(()=>document.getElementById('pinInput').focus(),50)}
+  if(m==='admin'&&!adminAuthenticated){document.getElementById('pinGate').style.display='block';document.getElementById('adminContent').style.display='none';setTimeout(()=>document.getElementById('pinInput').focus(),50)}
   if(m==='admin')render();
 }
-function tryPin(){
-  if(document.getElementById('pinInput').value===db.pin){
-    sessionStorage.setItem('ar_admin_ok','1');
-    document.getElementById('pinGate').style.display='none';
-    document.getElementById('adminContent').style.display='block';
-    document.getElementById('pinInput').value='';
-    render();
-  }else{alert('رمز غير صحيح ❌');document.getElementById('pinInput').value='';document.getElementById('pinInput').focus()}
+async function tryPin(){
+  const input=document.getElementById('pinInput');
+  try{
+    const login=await fetch('/api/state',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'login',pin:input.value})});
+    const result=await login.json();if(!login.ok)throw new Error(result.error||'تعذر تسجيل الدخول');
+    adminAuthenticated=true;
+    const response=await fetch('/api/state');const state=await response.json();if(!response.ok)throw new Error(state.error||'تعذر تحميل البيانات');
+    db={...defaults(),...(state.data||{})};document.getElementById('pinGate').style.display='none';document.getElementById('adminContent').style.display='block';input.value='';
+    if(!state.data)save();render();
+  }catch(err){adminAuthenticated=false;alert(err.message||'تعذر الاتصال بالخادم');input.value='';input.focus()}
 }
-function changePin(){
-  const p=prompt('أدخل رمز الدخول الجديد (أرقام فقط):',db.pin);
-  if(p===null)return;
-  if(!/^\d{4,6}$/.test(p)){alert('الرمز يجب أن يكون من 4 إلى 6 أرقام');return}
-  db.pin=p;save();alert('تم تغيير الرمز ✅');
-}
+function changePin(){alert('لتغيير الرمز حدّث ADMIN_PIN في إعدادات Vercel.')}
 
-/* ================= clock ================= */
 function tick(){
   const now=new Date();
   document.getElementById('clock').textContent=now.toLocaleTimeString('ar-EG');
@@ -389,14 +374,14 @@ function tick(){
 setInterval(tick,1000);tick();
 
 /* ================= guest: booking ================= */
-function submitBooking(e){
+async function submitBooking(e){
   e.preventDefault();
   const r={
     ref:'AR-'+String(Math.floor(Math.random()*9000)+1000),
     name:v('bkName'),title:v('bkTitle'),phone:v('bkPhone'),
     type:v('bkType'),time:v('bkTime'),reason:v('bkReason'),ts:Date.now()
   };
-  db.reqs.push(r);db.lastReq++;save();
+  try{const response=await fetch('/api/state',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'booking',booking:r})});const result=await response.json();if(!response.ok)throw new Error(result.error||'تعذر إرسال الطلب');Object.assign(r,result.booking)}catch(err){alert(err.message||'تعذر إرسال الطلب');return false}
   lastBooking=r;
   document.getElementById('bookForm').style.display='none';
   const cb=document.getElementById('confirmBox');
@@ -696,7 +681,7 @@ function render(){
   document.getElementById('stAppts').textContent=db.appts.filter(a=>a.st!=='تم').length;
   document.getElementById('stMeds').textContent=db.meds.filter(m=>!m.taken).length;
   document.getElementById('stReqs').textContent=db.reqs.length;
-  document.getElementById('pinShow').textContent=db.pin;
+  document.getElementById('pinShow').textContent='محفوظ في إعدادات الخادم';
   document.getElementById('waShow').textContent=db.wa||'لم يتم التعيين';
   const n=document.getElementById('notes');
   if(document.activeElement!==n)n.value=db.notes||'';
