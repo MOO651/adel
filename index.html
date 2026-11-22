@@ -430,7 +430,7 @@ if(db.lastReset!==new Date().toDateString()){
 /* ================= mode switching & PIN ================= */
 let lastBooking=null;
 function openAdminPanel(){showMode('admin')}
-+function showMode(m){
+function showMode(m){
   document.getElementById('tabGuest').classList.toggle('active',m==='guest');
   document.getElementById('tabAdmin').classList.toggle('active',m==='admin');
   document.getElementById('guestView').style.display=m==='guest'?'block':'none';
