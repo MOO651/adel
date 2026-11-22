@@ -116,6 +116,8 @@ footer{text-align:center;margin-top:50px;color:var(--ivory-dim);font-size:14px;o
 .tasks input[type=checkbox]{width:18px;height:18px;accent-color:var(--gold)}
 .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
 
+/* ===== logo image ===== */
+img.rlogo{width:82px;height:90px;object-fit:contain;filter:drop-shadow(0 0 14px rgba(212,175,55,.45))}
 /* ===== print ===== */
 .print-logo{display:none}
 #printArea{display:none}
@@ -124,9 +126,12 @@ footer{text-align:center;margin-top:50px;color:var(--ivory-dim);font-size:14px;o
   body::before{display:none}
   #appRoot{display:none !important}
   #printArea{display:block !important}
-  .phead{display:flex;align-items:center;gap:12px;border-bottom:2px solid #000;padding-bottom:10px;margin-bottom:14px}
-  .phead .plogo{border:2px solid #000;border-radius:50%;width:54px;height:54px;display:flex;align-items:center;justify-content:center;font-family:'Amiri',serif;font-size:26px;font-weight:bold}
-  .phead h1{font-family:'Amiri',serif;font-size:24px;margin:0}
+  .pcard{border:2.5px solid #D4AF37;border-radius:6px;padding:22px 26px !important;margin-bottom:8px}
+  .pcard::before{content:"";display:block;border:1px solid rgba(212,175,55,.6);border-radius:3px;padding:14px 18px;margin:-22px -26px 18px}
+  .phead{display:flex;align-items:center;gap:14px;border-bottom:2px solid #D4AF37;padding-bottom:10px;margin-bottom:6px}
+  .phead img.rlogo{width:64px;height:70px}
+  .phead h1{font-family:'Amiri',serif;font-size:24px;margin:0;color:#8a6d1c}
+  .pdate{text-align:center;font-size:14px;margin-bottom:14px}
   .pdate{text-align:center;font-size:14px;margin-bottom:14px}
   .pcard{page-break-after:always;padding:0}
   .pcard:last-child{page-break-after:auto}
@@ -158,13 +163,7 @@ footer{text-align:center;margin-top:50px;color:var(--ivory-dim);font-size:14px;o
 
 <!-- ============ HEADER (shared) ============ -->
 <header style="position:relative">
-  <svg class="logo" id="headerLogo" viewBox="0 0 100 100" onclick="showMode('admin')" style="cursor:pointer" title="اضغط 5 مرات لفتح لوحة المتابعة">
-    <circle cx="50" cy="50" r="47" fill="none" stroke="#D4AF37" stroke-width="2.5"/>
-    <circle cx="50" cy="50" r="39" fill="none" stroke="#D4AF37" stroke-width="1" opacity=".55"/>
-    <polygon points="50,14 82,50 50,86 18,50" fill="none" stroke="#e8cd7a" stroke-width="2"/>
-    <polygon points="50,30 68,50 50,70 32,50" fill="#D4AF37" opacity=".85"/>
-    <text x="50" y="58" text-anchor="middle" font-family="Amiri,serif" font-size="20" font-weight="bold" fill="#140709">أ</text>
-  </svg>
+  <img class="rlogo" id="headerLogo" src="_logo.png" alt="اللوجو" onclick="logoTap()" title="اضغط 5 مرات لفتح لوحة المتابعة">
   <div class="h-title">
     <h1>مكتب <span>المستشار أبو ريان</span></h1>
     <div class="subtitle">حجز المواعيد والمتابعة اليومية</div>
@@ -309,11 +308,7 @@ footer{text-align:center;margin-top:50px;color:var(--ivory-dim);font-size:14px;o
 
   <!-- hidden print header -->
   <div class="print-logo">
-    <svg viewBox="0 0 100 100" width="54" height="54">
-      <circle cx="50" cy="50" r="47" fill="none" stroke="#000" stroke-width="2.5"/>
-      <polygon points="50,14 82,50 50,86 18,50" fill="none" stroke="#000" stroke-width="2"/>
-      <polygon points="50,30 68,50 50,70 32,50" fill="#000"/>
-    </svg>
+    <img src="_logo.png" width="54" height="59">
     <h1>مكتب المستشار أبو ريان</h1>
   </div>
   <div class="print-date" id="printDate"></div>
@@ -426,10 +421,12 @@ function setWhatsApp(){
   if(!/^\d{10,15}$/.test(n)){alert('رقم غير صالح — أدخله بالصيغة الدولية بدون +');return}
   db.wa=n;save();alert('تم تعيين رقم واتساب المكتب ✅');
 }
+function logoTap(){}
 /* فتح لوحة التحكم: 5 ضغطات على اللوجو (مخفية) */
 let logoTaps=0,logoTimer=null;
 document.getElementById('headerLogo').addEventListener('click',()=>{
   logoTaps++;
+  clearTimeout(logoTimer);
   clearTimeout(logoTimer);
   logoTimer=setTimeout(()=>logoTaps=0,2000);
   if(logoTaps>=5){logoTaps=0;showMode('admin');document.getElementById('modeSwitch').style.display='flex'}
@@ -629,7 +626,7 @@ function todayStr(){
   try{return g+' — '+now.toLocaleDateString('ar-SA-u-ca-islamic',{day:'numeric',month:'long',year:'numeric'})+' هـ'}catch(e){return g}
 }
 function phead(){
-  return `<div class="phead"><div class="plogo">أ</div><h1>مكتب المستشار أبو ريان</h1></div>
+  return `<div class="phead"><img class="rlogo" src="_logo.png"><h1>مكتب المستشار أبو ريان</h1></div>
   <div class="pdate">التاريخ: ${todayStr()}</div>`;
 }
 /* ورقة مستقلة لعميل واحد */
