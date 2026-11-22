@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مكتب المستشار أبو ريان</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Amiri:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-deep:#140709;
+  --bg-mid:#3b1219;
+  --ivory:#F8F5F0;
+  --ivory-dim:#d8cfc0;
+  --gold:#D4AF37;
+  --gold-soft:#e8cd7a;
+  --green:#2e7d32;
+  --red:#8e2b2b;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Cairo',sans-serif;
+  color:var(--ivory);
+  min-height:100vh;
+  background:
+    radial-gradient(ellipse 75% 55% at 50% 32%, rgba(120,30,55,.55), transparent 70%),
+    radial-gradient(ellipse 55% 45% at 50% 48%, rgba(150,40,70,.28), transparent 70%),
+    linear-gradient(180deg, var(--bg-mid) 0%, var(--bg-deep) 70%, #0c0405 100%);
+  background-attachment:fixed;
+  overflow-x:hidden;
+}
+body::before{
+  content:"المستشار أبو ريان";
+  position:fixed;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Amiri',serif;font-size:15vw;font-weight:700;
+  color:rgba(255,255,255,.028);
+  transform:rotate(-18deg);
+  pointer-events:none;white-space:nowrap;z-index:0;
+}
+.wrap{position:relative;z-index:1;max-width:1150px;margin:0 auto;padding:20px 16px 60px}
+
+/* ===== header ===== */
+header{display:flex;align-items:center;gap:16px;justify-content:center;padding:22px 0 6px;flex-wrap:wrap;text-align:center}
+header svg.logo{width:78px;height:78px;filter:drop-shadow(0 0 14px rgba(212,175,55,.35))}
+.h-title h1{font-family:'Amiri',serif;font-size:36px;color:var(--ivory)}
+.h-title h1 span{color:var(--gold-soft)}
+.subtitle{color:var(--ivory-dim);font-size:15px;letter-spacing:1px}
+.mode-switch{display:flex;justify-content:center;gap:0;margin:20px auto 6px;border:1px solid rgba(212,175,55,.4);border-radius:14px;overflow:hidden;width:fit-content;background:rgba(0,0,0,.3)}
+.mode-switch button{
+  font-family:'Cairo',sans-serif;font-weight:700;font-size:15px;padding:12px 26px;
+  background:transparent;color:var(--ivory-dim);border:none;cursor:pointer;transition:.2s;
+}
+.mode-switch button.active{background:linear-gradient(180deg,var(--gold),#a8841c);color:#1a060a}
+
+/* ===== common ===== */
+.btn{
+  background:linear-gradient(180deg,var(--gold),#a8841c);
+  color:#1a060a;border:none;border-radius:10px;padding:10px 22px;
+  font-family:'Cairo',sans-serif;font-weight:700;font-size:15px;cursor:pointer;transition:.2s;
+}
+.btn:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.btn.ghost{background:transparent;color:var(--gold-soft);border:1px solid var(--gold)}
+.btn.danger{background:linear-gradient(180deg,#a03030,#7c1f1f);color:#fff}
+.btn.ok{background:linear-gradient(180deg,#3a9e4a,#2e7d32);color:#fff}
+.btn.wa{background:linear-gradient(180deg,#3fbf5a,#25a244);color:#fff}
+.btn.sm{padding:6px 14px;font-size:13px}
+section{margin-top:32px}
+h2{font-size:23px;color:var(--gold-soft);margin-bottom:14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(212,175,55,.3);padding-bottom:8px}
+h2::before{content:"◆";font-size:13px;color:var(--gold)}
+.card{background:rgba(255,255,255,.045);border:1px solid rgba(212,175,55,.2);border-radius:16px;padding:18px;backdrop-filter:blur(5px)}
+table{width:100%;border-collapse:collapse;font-size:16px}
+th{color:var(--gold-soft);font-size:14px;text-align:right;padding:10px 12px;border-bottom:2px solid rgba(212,175,55,.4)}
+td{padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.08);vertical-align:middle}
+tr:hover td{background:rgba(255,255,255,.03)}
+.time-cell{font-weight:700;color:var(--gold-soft);font-variant-numeric:tabular-nums;white-space:nowrap}
+.badge{padding:4px 12px;border-radius:20px;font-size:13px;font-weight:700;display:inline-block;border:none;cursor:pointer;font-family:'Cairo',sans-serif}
+.b-done{background:var(--green);color:#fff}
+.b-pending{background:rgba(212,175,55,.22);color:var(--gold-soft);border:1px solid var(--gold)}
+.b-late{background:var(--red);color:#fff}
+.b-now{background:#1d6fb8;color:#fff}
+.b-taken{background:var(--green) !important;color:#fff !important}
+small.instr{display:block;color:var(--ivory-dim);font-size:13px}
+input,select,textarea{font-family:'Cairo',sans-serif;font-size:15px;background:rgba(0,0,0,.35);color:var(--ivory);border:1px solid rgba(212,175,55,.35);border-radius:9px;padding:10px 12px;width:100%}
+input:focus,select:focus,textarea:focus{outline:1px solid var(--gold)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+label{font-size:14px;color:var(--ivory-dim);display:block;margin-bottom:5px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.icon-btn{background:none;border:none;color:var(--gold-soft);cursor:pointer;font-size:17px;padding:4px}
+.icon-btn:hover{color:#fff}
+.empty{color:var(--ivory-dim);text-align:center;padding:20px;font-size:15px}
+.table-scroll{overflow-x:auto}
+footer{text-align:center;margin-top:50px;color:var(--ivory-dim);font-size:14px;opacity:.7}
+
+/* ===== guest portal ===== */
+.hero{text-align:center;padding:10px 0 4px}
+.hero p.lead{color:var(--ivory-dim);font-size:17px;max-width:640px;margin:8px auto 22px;line-height:1.9}
+.confirm-box{display:none;text-align:center;padding:26px;border:1px solid var(--gold);border-radius:16px;background:rgba(212,175,55,.08)}
+.confirm-box .ref{font-size:30px;font-weight:900;color:var(--gold-soft);letter-spacing:2px;margin:10px 0}
+.confirm-box p{color:var(--ivory-dim);margin:6px 0}
+
+/* ===== admin ===== */
+#adminView{display:none}
+.topbar{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;background:rgba(255,255,255,.04);border:1px solid rgba(212,175,55,.25);border-radius:16px;padding:14px 18px;margin:8px 0;backdrop-filter:blur(6px)}
+.clock{font-size:26px;font-weight:700;color:var(--gold-soft);font-variant-numeric:tabular-nums}
+.greet{font-size:18px;font-weight:700}
+.date{color:var(--ivory-dim);font-size:14px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:16px 0}
+.stat{background:rgba(255,255,255,.05);border:1px solid rgba(212,175,55,.3);border-radius:14px;padding:16px;text-align:center}
+.stat .num{font-size:34px;font-weight:900;color:var(--gold-soft)}
+.stat .lbl{color:var(--ivory-dim);font-size:14px}
+.med-group-title{color:var(--gold-soft);font-weight:700;font-size:16px;margin:14px 0 4px}
+.pin-box{max-width:380px;margin:40px auto;text-align:center;padding:30px}
+.pin-box input{font-size:24px;text-align:center;letter-spacing:8px;margin:14px 0}
+.tasks label{display:flex;align-items:center;gap:8px;font-size:15px;color:var(--ivory);cursor:pointer;padding:6px 0}
+.tasks input[type=checkbox]{width:18px;height:18px;accent-color:var(--gold)}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+
+/* ===== print ===== */
+.print-logo{display:none}
+#printArea{display:none}
+@media print{
+  body{background:#fff !important;color:#000 !important}
+  body::before{display:none}
+  #appRoot{display:none !important}
+  #printArea{display:block !important}
+  .phead{display:flex;align-items:center;gap:12px;border-bottom:2px solid #000;padding-bottom:10px;margin-bottom:14px}
+  .phead .plogo{border:2px solid #000;border-radius:50%;width:54px;height:54px;display:flex;align-items:center;justify-content:center;font-family:'Amiri',serif;font-size:26px;font-weight:bold}
+  .phead h1{font-family:'Amiri',serif;font-size:24px;margin:0}
+  .pdate{text-align:center;font-size:14px;margin-bottom:14px}
+  .pcard{page-break-after:always;padding:0}
+  .pcard:last-child{page-break-after:auto}
+  .psec{margin-bottom:16px;page-break-inside:avoid}
+  .psec h3{font-size:16px;border-bottom:1.5px solid #000;padding-bottom:4px;margin-bottom:8px}
+  .pinfo{display:grid;grid-template-columns:1fr 1fr;gap:6px 20px;font-size:14px}
+  .pinfo div{border-bottom:1px dotted #999;padding:4px 0}
+  .pinfo b{color:#000}
+  table.pmed{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+  table.pmed th,table.pmed td{border:1px solid #444;padding:6px 8px;text-align:right}
+  table.pmed th{background:#f0f0f0}
+  .plines{margin-top:6px}
+  .plines div{border-bottom:1px solid #bbb;height:32px}
+  .pnext{margin-top:14px}
+}
+@media(max-width:640px){
+  h1{font-size:28px}
+  .clock{font-size:22px}
+  td,th{padding:8px 6px;font-size:14px}
+}
+</style>
+</head>
+<body>
+<!-- ============ PRINT AREA (only visible when printing) ============ -->
+<div id="printArea"></div>
+
+<div id="appRoot">
+<div class="wrap">
+
+<!-- ============ HEADER (shared) ============ -->
+<header style="position:relative">
+  <svg class="logo" id="headerLogo" viewBox="0 0 100 100" onclick="showMode('admin')" style="cursor:pointer" title="اضغط 5 مرات لفتح لوحة المتابعة">
+    <circle cx="50" cy="50" r="47" fill="none" stroke="#D4AF37" stroke-width="2.5"/>
+    <circle cx="50" cy="50" r="39" fill="none" stroke="#D4AF37" stroke-width="1" opacity=".55"/>
+    <polygon points="50,14 82,50 50,86 18,50" fill="none" stroke="#e8cd7a" stroke-width="2"/>
+    <polygon points="50,30 68,50 50,70 32,50" fill="#D4AF37" opacity=".85"/>
+    <text x="50" y="58" text-anchor="middle" font-family="Amiri,serif" font-size="20" font-weight="bold" fill="#140709">أ</text>
+  </svg>
+  <div class="h-title">
+    <h1>مكتب <span>المستشار أبو ريان</span></h1>
+    <div class="subtitle">حجز المواعيد والمتابعة اليومية</div>
+  </div>
+</header>
+
+<div class="mode-switch no-print" id="modeSwitch" style="display:none">
+  <button id="tabGuest" class="active" onclick="showMode('guest')">🕌 بوابة حجز المواعيد (للضيوف)</button>
+  <button id="tabAdmin" onclick="showMode('admin')">🔐 لوحة المتابعة الخاصة</button>
+</div>
+
+<!-- ============ GUEST VIEW ============ -->
+<div id="guestView">
+  <div class="hero">
+    <p class="lead">
+      أهلاً وسهلاً بك في بوابة مكتب المستشار أبو ريان. يسرنا أن تحجز موعدك عبر النموذج أدناه،
+      وسيتم مراجعة طلبك من إدارة المكتب وتأكيده في أقرب وقت. نتشرف بزيارتكم.
+    </p>
+  </div>
+
+  <section>
+    <h2>طلب حجز موعد</h2>
+    <div class="card">
+      <form id="bookForm" onsubmit="return submitBooking(event)">
+        <div class="grid">
+          <div><label>الاسم الكامل *</label><input id="bkName" required></div>
+          <div><label>الصفة / الجهة أو الشركة</label><input id="bkTitle"></div>
+          <div><label>رقم الهاتف (واتساب) *</label><input id="bkPhone" type="tel" dir="ltr" required></div>
+          <div><label>نوع اللقاء</label>
+            <select id="bkType">
+              <option>استشارة</option><option>اجتماع عمل</option>
+              <option>تعارف</option><option>متابعة موضوع</option>
+            </select></div>
+          <div><label>اليوم والوقت المفضل *</label><input id="bkTime" type="datetime-local" required></div>
+        <div style="margin-top:12px"><label>نبذة مختصرة عن موضوع المقابلة</label><textarea id="bkReason" rows="2"></textarea></div>
+        <div class="toolbar">
+          <button class="btn" type="submit">📩 إرسال طلب الموعد</button>
+          <button class="btn wa" type="button" onclick="sendWhatsApp()">💬 تأكيد الإرسال عبر واتساب المكتب (اختياري)</button>
+        </div>
+      </form>
+      <div class="confirm-box" id="confirmBox">
+        <h3 style="color:var(--gold-soft)">✅ تم استلام طلبك بنجاح</h3>
+        <p>رقمك المرجعي للمتابعة:</p>
+        <div class="ref" id="refNum"></div>
+        <p>سيتم التواصل معك من إدارة المكتب لتأكيد الموعد. شكراً لثقتكم.</p>
+      </div>
+    </div>
+  </section>
+  <footer>© مكتب المستشار أبو ريان — بوابة الضيوف</footer>
+</div>
+
+<!-- ============ ADMIN VIEW ============ -->
+<div id="adminView">
+  <div id="pinGate">
+    <div class="card pin-box">
+      <h2 style="justify-content:center;border:none">🔒 لوحة المتابعة الخاصة</h2>
+      <p style="color:var(--ivory-dim)">أدخل رمز الدخول للوصول للوحة</p>
+      <input id="pinInput" type="password" maxlength="6" placeholder="••••" onkeydown="if(event.key==='Enter')tryPin()">
+      <button class="btn" onclick="tryPin()">دخول</button>
+    </div>
+  </div>
+
+  <div id="adminContent" style="display:none">
+    <!-- welcome bar + stats -->
+    <div class="topbar">
+      <div class="greet">أهلاً بك سعادة المستشار أبو ريان 🌟</div>
+      <div class="clock" id="clock">00:00:00</div>
+      <div class="date" id="dateStr"></div>
+      <button class="btn" onclick="printAgenda()">🖨️ طباعة ملخص اليوم (A4)</button>
+      <button class="btn ghost" onclick="printAllClients()">👥 طباعة ورقة لكل عميل</button>
+    </div>
+    <div class="stats no-print">
+      <div class="stat"><div class="num" id="stAppts">0</div><div class="lbl">مواعيد اليوم</div></div>
+      <div class="stat"><div class="num" id="stMeds">0</div><div class="lbl">أدوية متبقية اليوم</div></div>
+      <div class="stat"><div class="num" id="stReqs">0</div><div class="lbl">طلبات حجز جديدة</div></div>
+    </div>
+
+    <!-- booking requests -->
+    <section class="no-print">
+      <h2>طلبات الحجز الواردة</h2>
+      <div class="card"><div class="table-scroll">
+        <table id="reqTable">
+          <thead><tr><th>الرقم المرجعي</th><th>الاسم</th><th>الصفة / الجهة</th><th>الهاتف</th><th>النوع</th><th>الوقت المفضل</th><th>الموضوع</th><th>إجراءات</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div></div>
+    </section>
+
+    <!-- appointments -->
+    <section>
+      <h2>جدول مواعيد اليوم</h2>
+      <div class="card"><div class="table-scroll">
+        <table id="apptTable">
+          <thead><tr><th>الوقت</th><th>الضيف والصفة</th><th>سبب المقابلة والتحضير</th><th>المكان</th><th>الحالة</th><th class="no-print">إجراءات</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="toolbar no-print"><button class="btn ghost" onclick="addAppt()">➕ إضافة موعد يدوي</button></div>
+      </div>
+    </section>
+
+    <!-- meds -->
+    <section>
+      <h2>جدول الأدوية والروتين الصحي</h2>
+      <div class="card" id="medCard"></div>
+    </section>
+
+    <!-- notes & tasks -->
+    <section class="no-print">
+      <h2>دفتر الملاحظات ومتابعة ما بعد الاجتماعات</h2>
+      <div class="card">
+        <label>ملاحظات وقرارات سريعة</label>
+        <textarea id="notes" style="min-height:110px;resize:vertical" placeholder="اكتب ملاحظاتك وقرارات كل اجتماع..." oninput="db.notes=this.value;save()"></textarea>
+        <div style="margin-top:14px" class="tasks">
+          <label style="font-weight:700;color:var(--gold-soft)">مهام المتابعة:</label>
+          <div id="taskList"></div>
+          <div class="toolbar">
+            <input id="newTask" placeholder="مهمة متابعة جديدة..." style="max-width:400px">
+            <button class="btn sm ghost" onclick="addTask()">➕ إضافة مهمة</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- settings -->
+    <section class="no-print">
+      <h2>الإعدادات والنسخ الاحتياطي</h2>
+      <div class="card">
+        <div class="toolbar" style="align-items:center">
+          <span>رمز الدخول الحالي: <b style="color:var(--gold-soft)" id="pinShow"></b></span>
+          <button class="btn sm ghost" onclick="changePin()">🔑 تغيير الرمز</button>
+          <span style="color:var(--ivory-dim)">واتساب المكتب: <b style="color:var(--gold-soft)" id="waShow"></b></span>
+          <button class="btn sm wa" onclick="setWhatsApp()">💬 تعيين رقم واتساب المكتب</button>
+          <button class="btn sm" onclick="exportData()">⬇️ تصدير نسخة احتياطية (JSON)</button>
+          <label class="btn sm ghost" style="display:inline-block">⬆️ استيراد نسخة<input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)"></label>
+          <button class="btn sm ghost" onclick="resetMeds()">🔄 إعادة ضبط الأدوية ليوم جديد</button>
+        </div>
+      </div>
+    </section>
+    <footer>© مكتب المستشار أبو ريان — لوحة المتابعة الخاصة</footer>
+  </div>
+
+  <!-- hidden print header -->
+  <div class="print-logo">
+    <svg viewBox="0 0 100 100" width="54" height="54">
+      <circle cx="50" cy="50" r="47" fill="none" stroke="#000" stroke-width="2.5"/>
+      <polygon points="50,14 82,50 50,86 18,50" fill="none" stroke="#000" stroke-width="2"/>
+      <polygon points="50,30 68,50 50,70 32,50" fill="#000"/>
+    </svg>
+    <h1>مكتب المستشار أبو ريان</h1>
+  </div>
+  <div class="print-date" id="printDate"></div>
+
+  <!-- printable notes lines -->
+  <section class="print-only-lines" style="display:none" id="printNotesSec">
+    <h2>مساحة للملاحظات بالقلم</h2>
+    <div class="card print-lines"><div></div><div></div><div></div></div>
+  </section>
+</div>
+</div>
+
+<script>
+/* ================= storage ================= */
+const KEY='abu_rayyan_office_v2';
+function defaults(){
+  return {
+    pin:'2026',wa:'',
+    meds:[
+      {t:"08:00",n:"دواء الضغط",dose:"1 قرص",food:"قبل الأكل",slot:"morning",taken:false,takenAt:null},
+      {t:"14:00",n:"دواء السكر",dose:"1 كبسولة",food:"بعد الأكل",slot:"noon",taken:false,takenAt:null},
+      {t:"18:00",n:"مضاد الهيستامين",dose:"نصف قرص",food:"مع الماء",slot:"evening",taken:false,takenAt:null},
+      {t:"21:30",n:"فيتامين د",dose:"1 قرص",food:"بعد العشا",slot:"night",taken:false,takenAt:null}
+    ],
+    appts:[
+      {t:"10:00",n:"أ. محمد سالم",title:"شركة النهضة",r:"مراجعة عقد — تجهيز النسخ",p:"المكتب الرئيسي",map:"",st:"قادم"},
+      {t:"16:00",n:"د. أحمد فؤاد",title:"عيادة خاصة",r:"استشارة قانونية",p:"العيادة",map:"",st:"قادم"}
+    ],
+    reqs:[],notes:"",tasks:[],lastReset:new Date().toDateString(),lastReq:0
+  };
+}
+let db;
+try{db=JSON.parse(localStorage.getItem(KEY))||defaults()}catch(e){db=defaults()}
+function save(){localStorage.setItem(KEY,JSON.stringify(db));render()}
+
+/* daily med reset */
+if(db.lastReset!==new Date().toDateString()){
+  db.meds.forEach(m=>{m.taken=false;m.takenAt=null});
+  db.lastReset=new Date().toDateString();save();
+}
+
+/* ================= mode switching & PIN ================= */
+let lastBooking=null;
+function showMode(m){
+  document.getElementById('tabGuest').classList.toggle('active',m==='guest');
+  document.getElementById('tabAdmin').classList.toggle('active',m==='admin');
+  document.getElementById('guestView').style.display=m==='guest'?'block':'none';
+  document.getElementById('adminView').style.display=m==='admin'?'block':'none';
+  if(m==='admin'&&!sessionStorage.getItem('ar_admin_ok')){document.getElementById('pinGate').style.display='block';document.getElementById('adminContent').style.display='none';setTimeout(()=>document.getElementById('pinInput').focus(),50)}
+  if(m==='admin')render();
+}
+function tryPin(){
+  if(document.getElementById('pinInput').value===db.pin){
+    sessionStorage.setItem('ar_admin_ok','1');
+    document.getElementById('pinGate').style.display='none';
+    document.getElementById('adminContent').style.display='block';
+    document.getElementById('pinInput').value='';
+    render();
+  }else{alert('رمز غير صحيح ❌');document.getElementById('pinInput').value='';document.getElementById('pinInput').focus()}
+}
+function changePin(){
+  const p=prompt('أدخل رمز الدخول الجديد (أرقام فقط):',db.pin);
+  if(p===null)return;
+  if(!/^\d{4,6}$/.test(p)){alert('الرمز يجب أن يكون من 4 إلى 6 أرقام');return}
+  db.pin=p;save();alert('تم تغيير الرمز ✅');
+}
+
+/* ================= clock ================= */
+function tick(){
+  const now=new Date();
+  document.getElementById('clock').textContent=now.toLocaleTimeString('ar-EG');
+  const g=now.toLocaleDateString('ar-EG',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  let h='';
+  try{h=now.toLocaleDateString('ar-SA-u-ca-islamic',{day:'numeric',month:'long',year:'numeric'})+' هـ'}catch(e){}
+  document.getElementById('dateStr').textContent=g+(h?' — '+h:'');
+  document.getElementById('printDate').textContent='تاريخ اليوم: '+g+(h?' — '+h:'');
+}
+setInterval(tick,1000);tick();
+
+/* ================= guest: booking ================= */
+function submitBooking(e){
+  e.preventDefault();
+  const r={
+    ref:'AR-'+String(Math.floor(Math.random()*9000)+1000),
+    name:v('bkName'),title:v('bkTitle'),phone:v('bkPhone'),
+    type:v('bkType'),time:v('bkTime'),reason:v('bkReason'),ts:Date.now()
+  };
+  db.reqs.push(r);db.lastReq++;save();
+  lastBooking=r;
+  document.getElementById('bookForm').style.display='none';
+  const cb=document.getElementById('confirmBox');
+  cb.style.display='block';
+  document.getElementById('refNum').textContent=r.ref;
+  return false;
+}
+function v(id){return document.getElementById(id).value.trim()}
+function sendWhatsApp(){
+  if(!lastBooking){alert('أرسل الطلب أولاً ثم يمكنك تأكيده عبر واتساب');return}
+  const b=lastBooking;
+  const msg=`طلب حجز موعد — مكتب المستشار أبو ريان%0A%0Aالرقم المرجعي: ${b.ref}%0Aالاسم: ${b.name}%0Aالصفة/الجهة: ${b.title||'-'}%0Aالهاتف: ${b.phone}%0Aنوع اللقاء: ${b.type}%0Aالوقت المفضل: ${b.time?b.time.replace('T',' '):'-'}%0Aالموضوع: ${b.reason||'-'}`;
+  const num=db.wa||'';
+  if(!num){alert('لم يتم تعيين رقم واتساب المكتب بعد — يرجى مراجعة إدارة المكتب.');return}
+  window.open('https://wa.me/'+num+'?text='+msg,'_blank');
+}
+/* تعيين رقم واتساب المكتب من الإعدادات */
+function setWhatsApp(){
+  const p=prompt('أدخل رقم واتساب المكتب بالصيغة الدولية بدون + (مثال: 201234567890):',db.wa||'');
+  if(p===null)return;
+  const n=p.replace(/[^\d]/g,'');
+  if(!/^\d{10,15}$/.test(n)){alert('رقم غير صالح — أدخله بالصيغة الدولية بدون +');return}
+  db.wa=n;save();alert('تم تعيين رقم واتساب المكتب ✅');
+}
+/* فتح لوحة التحكم: 5 ضغطات على اللوجو (مخفية) */
+let logoTaps=0,logoTimer=null;
+document.getElementById('headerLogo').addEventListener('click',()=>{
+  logoTaps++;
+  clearTimeout(logoTimer);
+  logoTimer=setTimeout(()=>logoTaps=0,2000);
+  if(logoTaps>=5){logoTaps=0;showMode('admin');document.getElementById('modeSwitch').style.display='flex'}
+});
+
+/* ================= admin: requests ================= */
+function renderReqs(){
+  const tb=document.querySelector('#reqTable tbody');
+  tb.innerHTML=db.reqs.length?db.reqs.map((r,i)=>`<tr>
+    <td><b style="color:var(--gold-soft)">${r.ref||'—'}</b></td>
+    <td><b>${esc(r.name)}</b></td><td>${esc(r.title)||'—'}</td>
+    <td dir="ltr">${esc(r.phone)||'—'}</td><td>${esc(r.type)||'—'}</td>
+    <td>${r.time?new Date(r.time).toLocaleString('ar-EG',{dateStyle:'short',timeStyle:'short'}):'—'}</td>
+    <td>${esc(r.reason)||'—'}</td>
+    <td class="actions">
+      <button class="btn ok sm" onclick="approveReq(${i})">✔ اعتماد ونقل</button>
+      <button class="btn wa sm" onclick="waClient(${i})">💬 واتساب</button>
+      <button class="btn ghost sm" onclick="editReq(${i})">✏️ تعديل</button>
+      <button class="btn danger sm" onclick="rejectReq(${i})">✖ رفض/أرشفة</button>
+    </td></tr>`).join('')
+  :'<tr><td colspan="8" class="empty">لا توجد طلبات حجز حالياً</td></tr>';
+}
+function esc(s){return String(s||'').replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]))}
+function approveReq(i){
+  const r=db.reqs[i];
+  const defT=r.time?new Date(r.time).toTimeString().slice(0,5):'10:00';
+  const t=prompt('حدد ساعة الموعد (مثال 10:30):',defT);if(t===null)return;
+  const p=prompt('المكان:','المكتب الرئيسي');if(p===null)return;
+  db.appts.push({t,n:r.name,title:r.title||'',r:(r.type?r.type+' — ':'')+(r.reason||''),p,map:'',st:'قادم'});
+  db.appts.sort((a,b)=>a.t.localeCompare(b.t));
+  db.reqs.splice(i,1);save();
+  alert('تم اعتماد الطلب ونقله لجدول المواعيد ✅');
+}
+function editReq(i){
+  const r=db.reqs[i];
+  const n=prompt('الاسم:',r.name);if(n===null)return;
+  const ph=prompt('الهاتف:',r.phone||'');if(ph===null)return;
+  const rs=prompt('الموضوع:',r.reason||'');if(rs===null)return;
+  Object.assign(db.reqs[i],{name:n,phone:ph,reason:rs});save();
+}
+function rejectReq(i){if(confirm('رفض وأرشفة هذا الطلب؟')){db.reqs.splice(i,1);save()}}
+/* مراسلة العميل على واتسابه من اللوحة */
+function waClient(i){
+  const r=db.reqs[i];
+  let num=(r.phone||'').replace(/[^\d]/g,'');
+  if(!num){alert('لا يوجد رقم هاتف لهذا الطلب');return}
+  if(num.length===11&&num.startsWith('01'))num='2'+num;
+  const msg=encodeURIComponent(`مرحباً ${r.name}،\nتلقينا طلب حجزك رقم ${r.ref||''} في مكتب المستشار أبو ريان.\nسيتم التواصل معك لتأكيد الموعد. شكراً لك.`);
+  window.open('https://wa.me/'+num+'?text='+msg,'_blank');
+}
+
+/* ================= admin: appointments ================= */
+function apptRow(a,i){
+  const cls={'تم':'b-done','مؤجل':'b-late','جاري الآن':'b-now'}[a.st]||'b-pending';
+  const map=a.map?` <a href="${esc(a.map)}" target="_blank" style="color:var(--gold-soft);font-size:12px">🗺️ خريطة</a>`:'';
+  return `<tr>
+    <td class="time-cell">${esc(a.t)}</td>
+    <td>${esc(a.n)}<small class="instr">${esc(a.title)||''}</small></td>
+    <td>${esc(a.r)||'—'}</td>
+    <td>${esc(a.p)||'—'}${map}</td>
+    <td><button class="badge ${cls}" onclick="cycleSt(${i})">${a.st}</button></td>
+    <td class="no-print actions">
+      <button class="icon-btn" title="طباعة ورقة هذا العميل" onclick="printClient(${i})">🖨️</button>
+      <button class="icon-btn" title="تعديل" onclick="editAppt(${i})">✏️</button>
+      <button class="icon-btn" title="حذف" onclick="delAppt(${i})">🗑️</button>
+    </td></tr>`;
+}
+function renderAppts(){
+  const tb=document.querySelector('#apptTable tbody');
+  tb.innerHTML=db.appts.length?db.appts.map(apptRow).join(''):'<tr><td colspan="6" class="empty">لا توجد مواعيد</td></tr>';
+}
+function cycleSt(i){
+  const o=['قادم','جاري الآن','تم','مؤجل'];
+  db.appts[i].st=o[(o.indexOf(db.appts[i].st)+1)%4];save();
+}
+function delAppt(i){if(confirm('حذف هذا الموعد؟')){db.appts.splice(i,1);save()}}
+function askAppt(a){
+  const t=prompt('الوقت (مثال 10:00):',a?a.t:'');if(t===null)return null;
+  const n=prompt('اسم الضيف:',a?a.n:'');if(n===null)return null;
+  const ti=prompt('الصفة / الجهة:',a?a.title||'':'');if(ti===null)return null;
+  const r=prompt('سبب المقابلة وملخص التحضير:',a?a.r||'':'');if(r===null)return null;
+  const p=prompt('المكان:',a?a.p||'':'');if(p===null)return null;
+  const map=prompt('رابط خرائط جوجل (اختياري):',a?a.map||'':'');if(map===null)return null;
+  return {t,n,title:ti,r,p,map,st:a?a.st:'قادم'};
+}
+function addAppt(){
+  const o=askAppt(null);if(!o||!o.t||!o.n)return;
+  db.appts.push(o);db.appts.sort((a,b)=>a.t.localeCompare(b.t));save();
+}
+function editAppt(i){
+  const o=askAppt(db.appts[i]);if(!o)return;
+  Object.assign(db.appts[i],o);db.appts.sort((a,b)=>a.t.localeCompare(b.t));save();
+}
+
+/* ================= admin: meds ================= */
+const SLOTS={morning:'🌅 الصباح',noon:'☀️ الظهر',evening:'🌆 المساء',night:'🌙 قبل النوم'};
+const FOODC={'قبل الأكل':'#e07b39','بعد الأكل':'#3a9e4a','مع الماء':'#1d6fb8'};
+function renderMeds(){
+  const c=document.getElementById('medCard');
+  let html='';
+  for(const s in SLOTS){
+    const list=db.meds.filter(m=>m.slot===s);
+    if(!list.length)continue;
+    html+=`<div class="med-group-title">${SLOTS[s]}</div><div class="table-scroll"><table><tbody>`;
+    html+=list.map(m=>{
+      const gi=db.meds.indexOf(m);
+      const fc=FOODC[m.food]||'#888';
+      return `<tr>
+        <td class="time-cell">${esc(m.t)}</td>
+        <td><b>${esc(m.n)}</b><small class="instr">الجرعة: ${esc(m.dose)||'—'}</small></td>
+        <td><span class="badge" style="background:${fc};color:#fff;cursor:default">${esc(m.food)}</span></td>
+        <td>${m.taken?`<small class="instr">أُخذت الساعة ${m.takenAt}</small>`:''}</td>
+        <td><button class="badge ${m.taken?'b-taken':'b-pending'}" onclick="takeMed(${gi})">${m.taken?'✔ تم الأخذ':'تم الأخذ ✓'}</button></td>
+        <td class="no-print actions">
+          <button class="icon-btn" onclick="editMed(${gi})">✏️</button>
+          <button class="icon-btn" onclick="delMed(${gi})">🗑️</button>
+        </td></tr>`;
+    }).join('');
+    html+='</tbody></table></div>';
+  }
+  html+=`<div class="toolbar no-print">
+    <button class="btn ghost" onclick="addMed()">➕ إضافة / تعديل دواء</button>
+    <button class="btn ghost" onclick="resetMeds()">🔄 إعادة ضبط ليوم جديد</button>
+  </div>`;
+  c.innerHTML=html;
+}
+function takeMed(i){
+  const m=db.meds[i];
+  if(m.taken){m.taken=false;m.takenAt=null}
+  else{m.taken=true;m.takenAt=new Date().toTimeString().slice(0,5)}
+  save();
+}
+function delMed(i){if(confirm('حذف هذا الدواء؟')){db.meds.splice(i,1);save()}}
+function askMed(m){
+  const n=prompt('اسم الدواء:',m?m.n:'');if(n===null)return null;
+  const dose=prompt('الجرعة:',m?m.dose||'':'');if(dose===null)return null;
+  const t=prompt('التوقيت (مثال 08:00):',m?m.t:'');if(t===null)return null;
+  const food=prompt('تعليمات الأكل (قبل الأكل / بعد الأكل / مع الماء):',m?m.food:'مع الماء');if(food===null)return null;
+  const slot=prompt('فترة اليوم (morning / noon / evening / night):',m?m.slot:'morning');if(slot===null)return null;
+  return {n,dose,t,food,slot:SLOTS[slot]?slot:'morning'};
+}
+function addMed(){
+  const o=askMed(null);if(!o||!o.n)return;
+  db.meds.push({...o,taken:false,takenAt:null});
+  db.meds.sort((a,b)=>a.t.localeCompare(b.t));save();
+}
+function editMed(i){
+  const o=askMed(db.meds[i]);if(!o)return;
+  Object.assign(db.meds[i],o);db.meds.sort((a,b)=>a.t.localeCompare(b.t));save();
+}
+function resetMeds(){
+  db.meds.forEach(m=>{m.taken=false;m.takenAt=null});
+  db.lastReset=new Date().toDateString();save();alert('تم إعادة ضبط الأدوية ليوم جديد 🌅');
+}
+
+/* ================= tasks ================= */
+function renderTasks(){
+  const el=document.getElementById('taskList');
+  el.innerHTML=db.tasks.length?db.tasks.map((t,i)=>`<label>
+    <input type="checkbox" ${t.done?'checked':''} onchange="db.tasks[${i}].done=this.checked;save()">
+    <span style="${t.done?'text-decoration:line-through;opacity:.6':''}">${esc(t.txt)}</span>
+    <button class="icon-btn" onclick="db.tasks.splice(${i},1);save()">🗑️</button></label>`).join('')
+  :'<div class="empty">لا توجد مهام متابعة</div>';
+}
+function addTask(){
+  const t=document.getElementById('newTask').value.trim();
+  if(!t)return;
+  db.tasks.push({txt:t,done:false});
+  document.getElementById('newTask').value='';save();
+}
+
+/* ================= backup ================= */
+function exportData(){
+  const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='abu_rayyan_backup_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+}
+function importData(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const d=JSON.parse(r.result);
+      if(!d.meds||!d.appts)throw 0;
+      db=d;save();alert('تم استيراد البيانات بنجاح ✅');
+    }catch(err){alert('ملف غير صالح ❌')}
+  };
+  r.readAsText(f);
+}
+
+/* ================= printing system ================= */
+function todayStr(){
+  const now=new Date();
+  const g=now.toLocaleDateString('ar-EG',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  try{return g+' — '+now.toLocaleDateString('ar-SA-u-ca-islamic',{day:'numeric',month:'long',year:'numeric'})+' هـ'}catch(e){return g}
+}
+function phead(){
+  return `<div class="phead"><div class="plogo">أ</div><h1>مكتب المستشار أبو ريان</h1></div>
+  <div class="pdate">التاريخ: ${todayStr()}</div>`;
+}
+/* ورقة مستقلة لعميل واحد */
+function clientPage(a){
+  return `<div class="pcard">
+    ${phead()}
+    <div class="psec"><h3>بيانات العميل</h3>
+      <div class="pinfo">
+        <div>الاسم الكامل: <b>${esc(a.n)}</b></div>
+        <div>الصفة / الجهة: <b>${esc(a.title)||'—'}</b></div>
+        <div>رقم الهاتف: <b>${esc(a.phone)||'—'}</b></div>
+        <div>نوع اللقاء: <b>${esc(a.type)||'—'}</b></div>
+        <div>الموعد: <b>${esc(a.t)}</b></div>
+        <div>المكان: <b>${esc(a.p)||'—'}</b></div>
+      </div>
+    </div>
+    <div class="psec"><h3>ملخص المقابلة / التحضير</h3>
+      <div style="font-size:14px;line-height:1.9;min-height:60px">${esc(a.r)||'—'}</div>
+    </div>
+    <div class="psec"><h3>ملاحظات وقرارات أثناء الاجتماع</h3>
+      <div class="plines"><div></div><div></div><div></div><div></div><div></div></div>
+    </div>
+    <div class="psec"><h3>الخطوة التالية / المتابعة</h3>
+      <div class="plines"><div></div><div></div></div>
+    </div>
+  </div>`;
+}
+function doPrint(html){
+  document.getElementById('printArea').innerHTML=html;
+  window.print();
+}
+/* 1) ملخص اليوم: أدوية + مواعيد + ملاحظات */
+function printAgenda(){
+  let meds='';
+  for(const s in SLOTS){
+    const list=db.meds.filter(m=>m.slot===s);
+    if(!list.length)continue;
+    meds+=`<tr><th colspan="5" style="text-align:right">${SLOTS[s]}</th></tr>`;
+    meds+=list.map(m=>`<tr><td>${esc(m.t)}</td><td>${esc(m.n)}</td><td>${esc(m.dose)||'—'}</td><td>${esc(m.food)}</td><td>${m.taken?'✔ '+m.takenAt:'☐'}</td></tr>`).join('');
+  }
+  const appts=db.appts.map(a=>`<tr><td>${esc(a.t)}</td><td>${esc(a.n)}${a.title?' — '+esc(a.title):''}</td><td>${esc(a.r)||'—'}</td><td>${esc(a.p)||'—'}</td><td>${esc(a.st)}</td></tr>`).join('');
+  doPrint(`<div class="pcard">
+    ${phead()}
+    <div class="psec"><h3>جدول الأدوية اليومي</h3>
+      ${meds?`<table class="pmed"><tr><th>التوقيت</th><th>الدواء</th><th>الجرعة</th><th>التعليمات</th><th>تم؟</th></tr>${meds}</table>`:'لا توجد أدوية'}
+    </div>
+    <div class="psec"><h3>جدول مواعيد اليوم</h3>
+      ${appts?`<table class="pmed"><tr><th>الساعة</th><th>العميل</th><th>سبب المقابلة</th><th>المكان</th><th>الحالة</th></tr>${appts}</table>`:'لا توجد مواعيد'}
+    </div>
+    <div class="psec"><h3>ملاحظات عامة</h3>
+      ${db.notes?`<div style="font-size:14px;line-height:1.9">${esc(db.notes)}</div>`:''}
+      <div class="plines"><div></div><div></div><div></div></div>
+    </div>
+  </div>`);
+}
+/* 2) ورقة لكل عميل (كل عميل في صفحة مستقلة) */
+function printAllClients(){
+  if(!db.appts.length){alert('لا توجد مواعيد لطباعتها');return}
+  doPrint(db.appts.map(clientPage).join(''));
+}
+/* 3) ورقة عميل محدد */
+function printClient(i){doPrint(clientPage(db.appts[i]))}
+
+/* ================= render ================= */
+function render(){
+  renderReqs();renderAppts();renderMeds();renderTasks();
+  document.getElementById('stAppts').textContent=db.appts.filter(a=>a.st!=='تم').length;
+  document.getElementById('stMeds').textContent=db.meds.filter(m=>!m.taken).length;
+  document.getElementById('stReqs').textContent=db.reqs.length;
+  document.getElementById('pinShow').textContent=db.pin;
+  document.getElementById('waShow').textContent=db.wa||'لم يتم التعيين';
+  const n=document.getElementById('notes');
+  if(document.activeElement!==n)n.value=db.notes||'';
+}
+document.getElementById('notes').value=db.notes||'';
+render();
+</script>
+</body>
+</html>
