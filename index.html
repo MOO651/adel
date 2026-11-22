@@ -143,7 +143,7 @@ img.rlogo{width:82px;height:90px;object-fit:contain;filter:drop-shadow(0 0 14px 
 /* ===== print ===== */
 .print-logo{display:none}
 #printArea{display:none}
-@page{size:A4 portrait;margin:12mm}
+@page{size:A4 portrait;margin:8mm}
 @media print{
   html,body{width:100%;min-height:0;background:#fff !important;color:#17130b !important;font-family:'Cairo',Arial,sans-serif !important;font-size:11pt;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   body::before{display:none}
@@ -211,6 +211,31 @@ img.rlogo{width:82px;height:90px;object-fit:contain;filter:drop-shadow(0 0 14px 
   .pcard{break-after:page;page-break-after:always}
   .pcard:last-child{break-after:auto;page-break-after:auto}
 }
+
+@media print{
+  @page{size:A4 portrait;margin:8mm}
+  html,body,#printArea{width:100%;margin:0;padding:0}
+  .pcard{box-sizing:border-box;min-height:281mm;height:auto;margin:0;padding:8mm 8mm 6mm!important;overflow:visible;border:1px solid #98762b;break-inside:avoid;page-break-inside:avoid}
+  .pcard::before{content:none!important}
+  .phead{gap:8mm;padding-bottom:4mm;margin-bottom:3mm}
+  .phead img.rlogo{width:20mm;height:23mm}
+  .phead h1{font-size:17pt;line-height:1.2}
+  .phead h1::after{font-size:8.5pt}
+  .pdate{font-size:8.5pt!important;margin:0 0 4mm!important}
+  .psec{margin-bottom:4mm!important;break-inside:avoid}
+  .psec h3{font-size:10pt!important;padding-bottom:1mm;margin-bottom:1.5mm}
+  .pinfo{font-size:9pt!important;gap:1mm 5mm!important}
+  .pinfo div{padding:1mm 0!important}
+  .plines div{height:6mm!important}
+  table.pmed{font-size:8pt!important;margin-top:1mm}
+  table.pmed th,table.pmed td{padding:1mm 1.5mm!important;line-height:1.25}
+  .agenda .psec{margin-bottom:3mm!important}
+  .agenda .plines div{height:5mm!important}
+  .agenda p,.agenda div{line-height:1.4}
+  .pcard{break-after:page;page-break-after:always}
+  .pcard:last-child{break-after:auto;page-break-after:auto}
+}
+
 </style>
 </head>
 <body>
@@ -695,7 +720,7 @@ function printAgenda(){
     meds+=list.map(m=>`<tr><td>${esc(m.t)}</td><td>${esc(m.n)}</td><td>${esc(m.dose)||'—'}</td><td>${esc(m.food)}</td><td>${m.taken?'✔ '+m.takenAt:'☐'}</td></tr>`).join('');
   }
   const appts=db.appts.map(a=>`<tr><td>${esc(a.t)}</td><td>${esc(a.n)}${a.title?' — '+esc(a.title):''}</td><td>${esc(a.r)||'—'}</td><td>${esc(a.p)||'—'}</td><td>${esc(a.st)}</td></tr>`).join('');
-  doPrint(`<div class="pcard">
+  doPrint(`<div class="pcard agenda">
     ${phead()}
     <div class="psec"><h3>جدول الأدوية اليومي</h3>
       ${meds?`<table class="pmed"><tr><th>التوقيت</th><th>الدواء</th><th>الجرعة</th><th>التعليمات</th><th>تم؟</th></tr>${meds}</table>`:'لا توجد أدوية'}
