@@ -115,6 +115,16 @@ footer{text-align:center;margin-top:50px;color:var(--ivory-dim);font-size:14px;o
 .tasks label{display:flex;align-items:center;gap:8px;font-size:15px;color:var(--ivory);cursor:pointer;padding:6px 0}
 .tasks input[type=checkbox]{width:18px;height:18px;accent-color:var(--gold)}
 .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.record-dialog{width:min(680px,calc(100% - 24px));max-height:90vh;margin:auto;border:1px solid rgba(212,175,55,.7);border-radius:20px;padding:0;background:#211014;color:var(--ivory);box-shadow:0 24px 90px #0009}
+.record-dialog::backdrop{background:rgba(8,3,5,.76);backdrop-filter:blur(4px)}
+.record-dialog form{padding:22px}
+.dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid rgba(212,175,55,.3);margin-bottom:16px}
+.dialog-head h2{border:0;margin:0;padding:0 0 12px}
+.dialog-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+.record-dialog textarea{min-height:90px;resize:vertical}
+.record-dialog .span-all{grid-column:1/-1}
+.empty-state{padding:28px 18px;border:1px dashed rgba(212,175,55,.38);border-radius:14px;text-align:center;color:var(--ivory-dim);line-height:1.9}
+.empty-state strong{display:block;color:var(--gold-soft);font-size:17px}
 /* Refined office dashboard */
 :focus-visible{outline:3px solid var(--gold-soft);outline-offset:3px}
 .h-title h1{line-height:1.3}
@@ -191,6 +201,10 @@ img.rlogo{width:82px;height:90px;object-fit:contain;filter:drop-shadow(0 0 14px 
   .stat .num{font-size:25px}
   .stat .lbl{font-size:12px}
   .pin-box{margin:24px auto;padding:22px}
+  .record-dialog form{padding:16px}
+  .record-dialog .grid{grid-template-columns:1fr}
+  .record-dialog .span-all{grid-column:auto}
+  .dialog-actions .btn{flex:1}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 @media print{
@@ -208,14 +222,14 @@ img.rlogo{width:82px;height:90px;object-fit:contain;filter:drop-shadow(0 0 14px 
 
 <!-- ============ HEADER (shared) ============ -->
 <header style="position:relative">
-  <img class="rlogo" id="headerLogo" src="_logo.png" alt="اللوجو" onclick="logoTap()" title="اضغط 5 مرات لفتح لوحة المتابعة">
+  <img class="rlogo" id="headerLogo" src="_logo.png" alt="اللوجو">
   <div class="h-title">
     <h1>مكتب <span>المستشار أبو ريان</span></h1>
     <div class="subtitle">حجز المواعيد والمتابعة اليومية</div>
   </div>
 </header>
 
-<div class="mode-switch no-print" id="modeSwitch" style="display:none">
+<div class="mode-switch no-print" id="modeSwitch">
   <button id="tabGuest" class="active" onclick="showMode('guest')">🕌 بوابة حجز المواعيد (للضيوف)</button>
   <button id="tabAdmin" onclick="showMode('admin')">🔐 لوحة المتابعة الخاصة</button>
 </div>
@@ -262,6 +276,7 @@ img.rlogo{width:82px;height:90px;object-fit:contain;filter:drop-shadow(0 0 14px 
 
 <!-- ============ ADMIN VIEW ============ -->
 <div id="adminView">
+  <dialog id="recordDialog" class="record-dialog"><form id="recordForm" method="dialog" onsubmit="saveRecord(event)"><div class="dialog-head"><h2 id="recordTitle"></h2><button class="icon-btn" type="button" onclick="closeRecordDialog()" aria-label="إغلاق">✕</button></div><div id="recordFields" class="grid"></div><div class="dialog-actions"><button class="btn ghost" type="button" onclick="closeRecordDialog()">إلغاء</button><button class="btn" type="submit">حفظ البيانات</button></div></form></dialog>
   <div id="pinGate">
     <div class="card pin-box">
       <h2 style="justify-content:center;border:none">🔒 لوحة المتابعة الخاصة</h2>
@@ -279,6 +294,7 @@ img.rlogo{width:82px;height:90px;object-fit:contain;filter:drop-shadow(0 0 14px 
       <div class="date" id="dateStr"></div>
       <button class="btn" onclick="printAgenda()">🖨️ طباعة ملخص اليوم (A4)</button>
       <button class="btn ghost" onclick="printAllClients()">👥 طباعة ورقة لكل عميل</button>
+      <button class="btn ghost" onclick="refreshData()" title="تحديث حجوزات العملاء">↻ تحديث البيانات</button>
     </div>
     <div class="stats no-print">
       <div class="stat"><div class="num" id="stAppts">0</div><div class="lbl">مواعيد اليوم</div></div>
@@ -404,6 +420,10 @@ async function tryPin(){
 function changePin(){alert('لتغيير الرمز حدّث ADMIN_PIN في إعدادات Vercel.')}
 
 /* ================= clock ================= */
+async function refreshData(){
+  try{const response=await fetch('/api/state');const result=await response.json();if(!response.ok)throw new Error(result.error||'Refresh failed');clearTimeout(saveTimer);db={...defaults(),...(result.data||{})};render();}
+  catch(error){alert(error.message||'Could not refresh dashboard data.')}
+}
 function tick(){
   const now=new Date();
   document.getElementById('clock').textContent=now.toLocaleTimeString('ar-EG');
@@ -438,7 +458,7 @@ function sendWhatsApp(){
   const msg=`طلب حجز موعد — مكتب المستشار أبو ريان%0A%0Aالرقم المرجعي: ${b.ref}%0Aالاسم: ${b.name}%0Aالصفة/الجهة: ${b.title||'-'}%0Aالهاتف: ${b.phone}%0Aنوع اللقاء: ${b.type}%0Aالوقت المفضل: ${b.time?b.time.replace('T',' '):'-'}%0Aالموضوع: ${b.reason||'-'}`;
   const num=db.wa||'';
   if(!num){alert('لم يتم تعيين رقم واتساب المكتب بعد — يرجى مراجعة إدارة المكتب.');return}
-  window.open('https://wa.me/'+num+'?text='+msg,'_blank');
+  window.open('https://wa.me/'+num+'?text='+encodeURIComponent(msg.replace(/%0A/g,'\n')),'_blank','noopener');
 }
 /* تعيين رقم واتساب المكتب من الإعدادات */
 function setWhatsApp(){
@@ -448,17 +468,6 @@ function setWhatsApp(){
   if(!/^\d{10,15}$/.test(n)){alert('رقم غير صالح — أدخله بالصيغة الدولية بدون +');return}
   db.wa=n;save();alert('تم تعيين رقم واتساب المكتب ✅');
 }
-function logoTap(){}
-/* فتح لوحة التحكم: 5 ضغطات على اللوجو (مخفية) */
-let logoTaps=0,logoTimer=null;
-document.getElementById('headerLogo').addEventListener('click',()=>{
-  logoTaps++;
-  clearTimeout(logoTimer);
-  clearTimeout(logoTimer);
-  logoTimer=setTimeout(()=>logoTaps=0,2000);
-  if(logoTaps>=5){logoTaps=0;showMode('admin');document.getElementById('modeSwitch').style.display='flex'}
-});
-
 /* ================= admin: requests ================= */
 function renderReqs(){
   const tb=document.querySelector('#reqTable tbody');
@@ -478,22 +487,11 @@ function renderReqs(){
 }
 function esc(s){return String(s||'').replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]))}
 function approveReq(i){
-  const r=db.reqs[i];
-  const defT=r.time?new Date(r.time).toTimeString().slice(0,5):'10:00';
-  const t=prompt('حدد ساعة الموعد (مثال 10:30):',defT);if(t===null)return;
-  const p=prompt('المكان:','المكتب الرئيسي');if(p===null)return;
-  db.appts.push({t,n:r.name,title:r.title||'',r:(r.type?r.type+' — ':'')+(r.reason||''),p,map:'',st:'قادم'});
-  db.appts.sort((a,b)=>a.t.localeCompare(b.t));
-  db.reqs.splice(i,1);save();
-  alert('تم اعتماد الطلب ونقله لجدول المواعيد ✅');
+  const r=db.reqs[i];if(!r)return;
+  const seed={t:r.time?new Date(r.time).toTimeString().slice(0,5):'10:00',n:r.name||'',title:r.title||'',r:(r.type?r.type+' — ':'')+(r.reason||''),p:'المكتب الرئيسي',map:'',st:'قادم'};
+  openRecordDialog('appointment',-1,seed);document.getElementById('recordForm').dataset.sourceRequest=String(i);
 }
-function editReq(i){
-  const r=db.reqs[i];
-  const n=prompt('الاسم:',r.name);if(n===null)return;
-  const ph=prompt('الهاتف:',r.phone||'');if(ph===null)return;
-  const rs=prompt('الموضوع:',r.reason||'');if(rs===null)return;
-  Object.assign(db.reqs[i],{name:n,phone:ph,reason:rs});save();
-}
+function editReq(i){openRecordDialog('request',i)}
 function rejectReq(i){if(confirm('رفض وأرشفة هذا الطلب؟')){db.reqs.splice(i,1);save()}}
 /* مراسلة العميل على واتسابه من اللوحة */
 function waClient(i){
@@ -523,29 +521,46 @@ function apptRow(a,i){
 }
 function renderAppts(){
   const tb=document.querySelector('#apptTable tbody');
-  tb.innerHTML=db.appts.length?db.appts.map(apptRow).join(''):'<tr><td colspan="6" class="empty">لا توجد مواعيد</td></tr>';
+  tb.innerHTML=db.appts.length?db.appts.map(apptRow).join(''):'<tr><td colspan="6"><div class="empty-state"><strong>لا توجد مواعيد بعد</strong>أضف موعدًا يدويًا أو اعتمد طلبًا من قائمة الحجوزات.</div></td></tr>';
 }
 function cycleSt(i){
   const o=['قادم','جاري الآن','تم','مؤجل'];
   db.appts[i].st=o[(o.indexOf(db.appts[i].st)+1)%4];save();
 }
 function delAppt(i){if(confirm('حذف هذا الموعد؟')){db.appts.splice(i,1);save()}}
-function askAppt(a){
-  const t=prompt('الوقت (مثال 10:00):',a?a.t:'');if(t===null)return null;
-  const n=prompt('اسم الضيف:',a?a.n:'');if(n===null)return null;
-  const ti=prompt('الصفة / الجهة:',a?a.title||'':'');if(ti===null)return null;
-  const r=prompt('سبب المقابلة وملخص التحضير:',a?a.r||'':'');if(r===null)return null;
-  const p=prompt('المكان:',a?a.p||'':'');if(p===null)return null;
-  const map=prompt('رابط خرائط جوجل (اختياري):',a?a.map||'':'');if(map===null)return null;
-  return {t,n,title:ti,r,p,map,st:a?a.st:'قادم'};
+function addAppt(){openRecordDialog('appointment',-1)}
+function editAppt(i){openRecordDialog('appointment',i)}
+function openRecordDialog(kind,index,seed=null){
+  if(!adminAuthenticated){alert('سجل الدخول أولًا');return}
+  const dialog=document.getElementById('recordDialog'),fields=document.getElementById('recordFields');
+  const item=seed||(kind==='appointment'?db.appts[index]:kind==='medication'?db.meds[index]:db.reqs[index]);
+  const config={
+    appointment:{title:index<0?'إضافة موعد جديد':'تعديل الموعد',names:['t','n','title','r','p','map','st'],html:'<label>الوقت<input name="t" type="time" required></label><label>اسم العميل<input name="n" maxlength="200" required></label><label>الصفة أو الجهة<input name="title" maxlength="200"></label><label>مكان الاجتماع<input name="p" maxlength="200"></label><label class="span-all">موضوع المقابلة والتحضير<textarea name="r" maxlength="2000"></textarea></label><label class="span-all">رابط الموقع على الخرائط<input name="map" type="url" maxlength="1000" placeholder="https://maps.google.com/..."></label><label>الحالة<select name="st"><option>قادم</option><option>جاري الآن</option><option>تم</option><option>مؤجل</option></select></label>'},
+    medication:{title:index<0?'إضافة تذكير دواء':'تعديل تذكير الدواء',names:['n','dose','t','food','slot'],html:'<label>اسم الدواء<input name="n" maxlength="200" required></label><label>الجرعة<input name="dose" maxlength="100"></label><label>الوقت<input name="t" type="time" required></label><label>تعليمات الطعام<select name="food"><option>قبل الأكل</option><option>بعد الأكل</option><option>مع الماء</option></select></label><label>الفترة<select name="slot"><option value="morning">الصباح</option><option value="noon">الظهر</option><option value="evening">المساء</option><option value="night">قبل النوم</option></select></label>'},
+    request:{title:'تعديل طلب الحجز',names:['name','title','phone','type','time','reason'],html:'<label>اسم العميل<input name="name" maxlength="200" required></label><label>الصفة أو الجهة<input name="title" maxlength="200"></label><label>رقم الهاتف<input name="phone" type="tel" maxlength="30" required></label><label>نوع اللقاء<select name="type"><option>استشارة</option><option>اجتماع عمل</option><option>تعارف</option><option>متابعة موضوع</option></select></label><label>الموعد المفضل<input name="time" type="datetime-local"></label><label class="span-all">موضوع الطلب<textarea name="reason" maxlength="2000"></textarea></label>'}
+  }[kind];
+  document.getElementById('recordTitle').textContent=config.title;fields.innerHTML=config.html;
+  const form=document.getElementById('recordForm');form.dataset.kind=kind;form.dataset.index=String(index);form.dataset.sourceRequest='-1';
+  if(item)for(const name of config.names){const input=form.elements.namedItem(name);if(input)input.value=item[name]||''}
+  dialog.showModal();fields.querySelector('input')?.focus();
 }
-function addAppt(){
-  const o=askAppt(null);if(!o||!o.t||!o.n)return;
-  db.appts.push(o);db.appts.sort((a,b)=>a.t.localeCompare(b.t));save();
-}
-function editAppt(i){
-  const o=askAppt(db.appts[i]);if(!o)return;
-  Object.assign(db.appts[i],o);db.appts.sort((a,b)=>a.t.localeCompare(b.t));save();
+function closeRecordDialog(){document.getElementById('recordDialog').close()}
+function saveRecord(event){
+  event.preventDefault();const form=event.currentTarget;if(!form.reportValidity())return;
+  const values=Object.fromEntries(new FormData(form).entries()),kind=form.dataset.kind,index=Number(form.dataset.index);
+  if(kind==='appointment'){
+    const record={...values,st:values.st||'قادم'};
+    if(index<0)db.appts.push(record);else Object.assign(db.appts[index],record);
+    const sourceRequest=Number(form.dataset.sourceRequest);if(sourceRequest>=0)db.reqs.splice(sourceRequest,1);
+    db.appts.sort((x,y)=>x.t.localeCompare(y.t));
+  }else if(kind==='medication'){
+    const record={...values,taken:index<0?false:db.meds[index].taken,takenAt:index<0?null:db.meds[index].takenAt};
+    if(index<0)db.meds.push(record);else Object.assign(db.meds[index],record);
+    db.meds.sort((x,y)=>x.t.localeCompare(y.t));
+  }else{
+    Object.assign(db.reqs[index],values);
+  }
+  closeRecordDialog();save();
 }
 
 /* ================= admin: meds ================= */
@@ -553,7 +568,7 @@ const SLOTS={morning:'🌅 الصباح',noon:'☀️ الظهر',evening:'🌆 
 const FOODC={'قبل الأكل':'#e07b39','بعد الأكل':'#3a9e4a','مع الماء':'#1d6fb8'};
 function renderMeds(){
   const c=document.getElementById('medCard');
-  let html='';
+  let html=db.meds.length?'':'<div class="empty-state"><strong>لا توجد تذكيرات دواء</strong>أضف التذكيرات التي تحتاجها من الزر بالأسفل.</div>';
   for(const s in SLOTS){
     const list=db.meds.filter(m=>m.slot===s);
     if(!list.length)continue;
@@ -587,23 +602,8 @@ function takeMed(i){
   save();
 }
 function delMed(i){if(confirm('حذف هذا الدواء؟')){db.meds.splice(i,1);save()}}
-function askMed(m){
-  const n=prompt('اسم الدواء:',m?m.n:'');if(n===null)return null;
-  const dose=prompt('الجرعة:',m?m.dose||'':'');if(dose===null)return null;
-  const t=prompt('التوقيت (مثال 08:00):',m?m.t:'');if(t===null)return null;
-  const food=prompt('تعليمات الأكل (قبل الأكل / بعد الأكل / مع الماء):',m?m.food:'مع الماء');if(food===null)return null;
-  const slot=prompt('فترة اليوم (morning / noon / evening / night):',m?m.slot:'morning');if(slot===null)return null;
-  return {n,dose,t,food,slot:SLOTS[slot]?slot:'morning'};
-}
-function addMed(){
-  const o=askMed(null);if(!o||!o.n)return;
-  db.meds.push({...o,taken:false,takenAt:null});
-  db.meds.sort((a,b)=>a.t.localeCompare(b.t));save();
-}
-function editMed(i){
-  const o=askMed(db.meds[i]);if(!o)return;
-  Object.assign(db.meds[i],o);db.meds.sort((a,b)=>a.t.localeCompare(b.t));save();
-}
+function addMed(){openRecordDialog('medication',-1)}
+function editMed(i){openRecordDialog('medication',i)}
 function resetMeds(){
   db.meds.forEach(m=>{m.taken=false;m.takenAt=null});
   db.lastReset=new Date().toDateString();save();alert('تم إعادة ضبط الأدوية ليوم جديد 🌅');
